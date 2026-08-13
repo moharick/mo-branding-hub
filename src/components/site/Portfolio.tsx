@@ -10,6 +10,7 @@ import evergreenFlyer from "@/assets/Evergreen_Peri.png.asset.json";
 import evergreenLogo from "@/assets/Evergreen_3.png.asset.json";
 import jgLogo from "@/assets/JG_Logo_1_1.png.asset.json";
 import moPoster from "@/assets/Mo_Branding.png.asset.json";
+import bahariWebsite from "@/assets/bahari-website.png.asset.json";
 
 type Item = { title: string; client: string; category: string; url: string; alt: string };
 
@@ -84,6 +85,13 @@ const ITEMS: Item[] = [
     url: bahariCover.url,
     alt: "Wide social media cover banner with cruise ship and service icons",
   },
+  {
+    title: "Bahari Careers website",
+    client: "Bahari Careers",
+    category: "Websites",
+    url: bahariWebsite.url,
+    alt: "Bahari Careers website homepage showing cruise recruitment services",
+  },
 ];
 
 const FILTERS = ["All", ...Array.from(new Set(ITEMS.map((item) => item.category)))];
@@ -103,8 +111,8 @@ export function Portfolio() {
             Sample works from real clients
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Logos, posters, flyers, menus and social media designs delivered for businesses and
-            schools across Kenya.
+            Logos, posters, flyers, menus, websites and social media designs delivered for
+            businesses and schools across Kenya.
           </p>
         </div>
 
