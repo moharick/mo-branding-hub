@@ -85,6 +85,13 @@ const ITEMS: Item[] = [
     url: bahariCover.url,
     alt: "Wide social media cover banner with cruise ship and service icons",
   },
+  {
+    title: "Bahari Careers website",
+    client: "Bahari Careers",
+    category: "Websites",
+    url: bahariWebsite.url,
+    alt: "Bahari Careers website homepage showing cruise recruitment services",
+  },
 ];
 
 const FILTERS = ["All", ...Array.from(new Set(ITEMS.map((item) => item.category)))];
