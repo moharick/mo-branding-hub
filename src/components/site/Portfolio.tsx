@@ -10,6 +10,7 @@ import evergreenFlyer from "@/assets/Evergreen_Peri.png.asset.json";
 import evergreenLogo from "@/assets/Evergreen_3.png.asset.json";
 import jgLogo from "@/assets/JG_Logo_1_1.png.asset.json";
 import moPoster from "@/assets/Mo_Branding.png.asset.json";
+import bahariWebsite from "@/assets/bahari-website.png.asset.json";
 
 type Item = { title: string; client: string; category: string; url: string; alt: string };
 
