@@ -111,8 +111,8 @@ export function Portfolio() {
             Sample works from real clients
           </h2>
           <p className="mt-3 text-muted-foreground">
-            Logos, posters, flyers, menus and social media designs delivered for businesses and
-            schools across Kenya.
+            Logos, posters, flyers, menus, websites and social media designs delivered for
+            businesses and schools across Kenya.
           </p>
         </div>
 
