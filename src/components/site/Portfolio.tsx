@@ -161,6 +161,17 @@ export function Portfolio() {
                   {item.category} · {item.client}
                 </p>
                 <p className="mt-1 font-semibold text-foreground">{item.title}</p>
+                {item.link ? (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary underline underline-offset-4"
+                  >
+                    Visit live site
+                    <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
               </figcaption>
             </figure>
           ))}
