@@ -12,7 +12,14 @@ import jgLogo from "@/assets/JG_Logo_1_1.png.asset.json";
 import moPoster from "@/assets/Mo_Branding.png.asset.json";
 import bahariWebsite from "@/assets/bahari-website.png.asset.json";
 
-type Item = { title: string; client: string; category: string; url: string; alt: string };
+type Item = {
+  title: string;
+  client: string;
+  category: string;
+  url: string;
+  alt: string;
+  link?: string;
+};
 
 const ITEMS: Item[] = [
   {
