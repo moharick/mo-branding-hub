@@ -160,9 +160,12 @@ export function Contact() {
                 maxLength={100}
                 onChange={(e) => set("name", e.target.value)}
                 placeholder="Your full name"
+                {...fieldProps("name")}
               />
               {errors["name"] ? (
-                <p className="text-xs text-destructive">{errors["name"]}</p>
+                <p id="name-error" className="text-xs text-destructive">
+                  {errors["name"]}
+                </p>
               ) : null}
             </div>
             <div className="grid gap-2">
@@ -174,9 +177,12 @@ export function Contact() {
                 maxLength={30}
                 onChange={(e) => set("phone", e.target.value)}
                 placeholder="07XX XXX XXX"
+                {...fieldProps("phone")}
               />
               {errors["phone"] ? (
-                <p className="text-xs text-destructive">{errors["phone"]}</p>
+                <p id="phone-error" className="text-xs text-destructive">
+                  {errors["phone"]}
+                </p>
               ) : null}
             </div>
             <div className="grid gap-2 sm:col-span-2">
@@ -188,9 +194,12 @@ export function Contact() {
                 maxLength={255}
                 onChange={(e) => set("email", e.target.value)}
                 placeholder="you@example.com"
+                {...fieldProps("email")}
               />
               {errors["email"] ? (
-                <p className="text-xs text-destructive">{errors["email"]}</p>
+                <p id="email-error" className="text-xs text-destructive">
+                  {errors["email"]}
+                </p>
               ) : null}
             </div>
             <div className="grid gap-2 sm:col-span-2">
@@ -199,7 +208,8 @@ export function Contact() {
                 id="service"
                 value={values.service}
                 onChange={(e) => set("service", e.target.value)}
-                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring aria-[invalid=true]:border-destructive"
+                {...fieldProps("service")}
               >
                 <option value="">Select a service</option>
                 {SERVICE_OPTIONS.map((option) => (
@@ -210,7 +220,9 @@ export function Contact() {
                 <option value="Other">Other</option>
               </select>
               {errors["service"] ? (
-                <p className="text-xs text-destructive">{errors["service"]}</p>
+                <p id="service-error" className="text-xs text-destructive">
+                  {errors["service"]}
+                </p>
               ) : null}
             </div>
             <div className="grid gap-2 sm:col-span-2">
@@ -222,17 +234,49 @@ export function Contact() {
                 maxLength={2000}
                 onChange={(e) => set("message", e.target.value)}
                 placeholder="Briefly describe what you need and when you need it."
+                {...fieldProps("message")}
               />
-              {errors["message"] ? (
-                <p className="text-xs text-destructive">{errors["message"]}</p>
-              ) : null}
+              <div className="flex items-start justify-between gap-3">
+                {errors["message"] ? (
+                  <p id="message-error" className="text-xs text-destructive">
+                    {errors["message"]}
+                  </p>
+                ) : (
+                  <span />
+                )}
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  {values.message.trim().length}/2000
+                </span>
+              </div>
             </div>
           </div>
+
+          <div aria-live="polite" className="mt-6 empty:mt-0">
+            {status ? (
+              <div
+                role={status.kind === "error" ? "alert" : "status"}
+                className={`flex items-start gap-2 rounded-2xl border p-4 text-sm ${
+                  status.kind === "success"
+                    ? "border-primary/30 bg-primary/5 text-primary"
+                    : "border-destructive/30 bg-destructive/5 text-destructive"
+                }`}
+              >
+                {status.kind === "success" ? (
+                  <CheckCircle2 aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+                ) : (
+                  <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+                )}
+                <span>{status.text}</span>
+              </div>
+            ) : null}
+          </div>
+
           <Button type="submit" size="lg" className="mt-6 w-full sm:w-auto" disabled={submitting}>
             <Send aria-hidden="true" />
             {submitting ? "Sending..." : "Send Message"}
           </Button>
         </form>
+
       </div>
     </section>
   );
