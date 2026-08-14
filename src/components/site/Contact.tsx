@@ -31,10 +31,11 @@ const schema = z.object({
 const EMPTY = { name: "", phone: "", email: "", service: "", message: "" };
 type Field = keyof typeof EMPTY;
 type Status = { kind: "success" | "error"; text: string } | null;
+type Errors = { [K in Field]?: string | undefined };
 
 export function Contact() {
   const [values, setValues] = useState(EMPTY);
-  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
+  const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>(null);
 
@@ -62,7 +63,7 @@ export function Contact() {
 
   const fieldProps = (key: Field) => ({
     "aria-invalid": Boolean(errors[key]),
-    "aria-describedby": errors[key] ? `${key}-error` : undefined,
+    ...(errors[key] ? { "aria-describedby": `${key}-error` } : {}),
     onBlur: () => validateField(key),
   });
 
@@ -71,7 +72,7 @@ export function Contact() {
     setStatus(null);
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
-      const fieldErrors: Partial<Record<Field, string>> = {};
+      const fieldErrors: Errors = {};
       for (const issue of parsed.error.issues) {
         const key = issue.path[0] as Field;
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
