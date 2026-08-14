@@ -98,6 +98,7 @@ const ITEMS: Item[] = [
     category: "Websites",
     url: bahariWebsite.url,
     alt: "Bahari Careers website homepage showing cruise recruitment services",
+    link: "https://baharicareers.com",
   },
 ];
 
