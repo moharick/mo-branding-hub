@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Mail, MessageCircle, Phone, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Mail, MessageCircle, Phone, Send } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -12,41 +12,78 @@ import { onRequestService } from "@/lib/request-service";
 import { CONTACT, SERVICE_OPTIONS } from "@/lib/site-data";
 
 const schema = z.object({
-  name: z.string().trim().min(2, "Please enter your name").max(100),
-  phone: z.string().trim().min(7, "Please enter a valid phone number").max(30),
-  email: z.string().trim().email("Please enter a valid email address").max(255),
+  name: z.string().trim().min(2, "Please enter your name (at least 2 characters)").max(100, "Name must be under 100 characters"),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Please enter a valid phone number")
+    .max(30, "Phone number must be under 30 characters")
+    .regex(/^[0-9+()\-.\s]+$/, "Phone can only contain numbers, spaces and + ( ) -"),
+  email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be under 255 characters"),
   service: z.string().trim().min(1, "Please select a service").max(100),
-  message: z.string().trim().min(10, "Tell us a little more (10+ characters)").max(2000),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Tell us a little more (at least 10 characters)")
+    .max(2000, "Message must be under 2000 characters"),
 });
 
 const EMPTY = { name: "", phone: "", email: "", service: "", message: "" };
+type Field = keyof typeof EMPTY;
+type Status = { kind: "success" | "error"; text: string } | null;
 
 export function Contact() {
   const [values, setValues] = useState(EMPTY);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<Status>(null);
 
   useEffect(
     () =>
       onRequestService((service) => {
         setValues((prev) => ({ ...prev, service }));
+        setErrors((prev) => ({ ...prev, service: undefined }));
       }),
     [],
   );
 
-  const set = (key: keyof typeof EMPTY, value: string) =>
+  const set = (key: Field, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  };
+
+  const validateField = (key: Field) => {
+    const result = schema.shape[key].safeParse(values[key]);
+    setErrors((prev) => ({
+      ...prev,
+      [key]: result.success ? undefined : result.error.issues[0]?.message,
+    }));
+  };
+
+  const fieldProps = (key: Field) => ({
+    "aria-invalid": Boolean(errors[key]),
+    "aria-describedby": errors[key] ? `${key}-error` : undefined,
+    onBlur: () => validateField(key),
+  });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setStatus(null);
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
-      const fieldErrors: Record<string, string> = {};
+      const fieldErrors: Partial<Record<Field, string>> = {};
       for (const issue of parsed.error.issues) {
-        const key = String(issue.path[0]);
+        const key = issue.path[0] as Field;
         if (!fieldErrors[key]) fieldErrors[key] = issue.message;
       }
       setErrors(fieldErrors);
+      const count = Object.keys(fieldErrors).length;
+      setStatus({
+        kind: "error",
+        text: `Please fix ${count} ${count === 1 ? "field" : "fields"} below before sending.`,
+      });
+      const first = document.getElementById(Object.keys(fieldErrors)[0] ?? "name");
+      first?.focus();
       return;
     }
 
@@ -56,13 +93,18 @@ export function Contact() {
     setSubmitting(false);
 
     if (error) {
-      toast.error("We couldn't send your message. Please try WhatsApp or email instead.");
+      const text = "We couldn't send your message. Please try WhatsApp or email instead.";
+      setStatus({ kind: "error", text });
+      toast.error(text);
       return;
     }
 
-    toast.success("Message sent. We'll get back to you shortly.");
+    const text = "Message sent. We'll get back to you shortly.";
+    setStatus({ kind: "success", text });
+    toast.success(text);
     setValues(EMPTY);
   }
+
 
   return (
     <section id="contact" className="border-t border-border bg-muted/50 py-16 lg:py-24">
