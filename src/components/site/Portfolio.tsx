@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 
 import adoyoLogo from "@/assets/Adoyo_1.png.asset.json";
@@ -12,7 +13,14 @@ import jgLogo from "@/assets/JG_Logo_1_1.png.asset.json";
 import moPoster from "@/assets/Mo_Branding.png.asset.json";
 import bahariWebsite from "@/assets/bahari-website.png.asset.json";
 
-type Item = { title: string; client: string; category: string; url: string; alt: string };
+type Item = {
+  title: string;
+  client: string;
+  category: string;
+  url: string;
+  alt: string;
+  link?: string;
+};
 
 const ITEMS: Item[] = [
   {
@@ -91,6 +99,7 @@ const ITEMS: Item[] = [
     category: "Websites",
     url: bahariWebsite.url,
     alt: "Bahari Careers website homepage showing cruise recruitment services",
+    link: "https://baharicareers.com",
   },
 ];
 
@@ -153,6 +162,17 @@ export function Portfolio() {
                   {item.category} · {item.client}
                 </p>
                 <p className="mt-1 font-semibold text-foreground">{item.title}</p>
+                {item.link ? (
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary underline underline-offset-4"
+                  >
+                    Visit live site
+                    <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
               </figcaption>
             </figure>
           ))}
