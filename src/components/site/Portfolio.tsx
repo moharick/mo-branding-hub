@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 
 import adoyoLogo from "@/assets/Adoyo_1.png.asset.json";
